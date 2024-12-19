@@ -1,0 +1,4 @@
+[D-BUS Service]
+Name=org.freedesktop.impl.portal.desktop.faraway
+Exec=@LIBEXECDIR@/xdg-desktop-portal-faraway
+SystemdService=xdg-desktop-portal-faraway.service

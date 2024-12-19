@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright 2021-2023 elementary, Inc. <contact@elementary.io> -->
+<component>
+  <id>dev.geopjr.faraway</id>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>GPL-3.0</project_license>
+  <compulsory_for_desktop>GNOME</compulsory_for_desktop>
+  <translation type="gettext">xdg-desktop-portal-faraway</translation>
+
+  <name>xdg-desktop-portal-faraway</name>
+  <summary>AppChooser portal that opens the default app</summary>
+  <description>
+    <p>AppChooser portal that opens the default app</p>
+  </description>
+
+  <developer id="dev.geopjr">
+    <name>GeopJr</name>
+  </developer>
+
+  <releases>
+    <release version="0.0.1" data="2024-12-20">
+      <description>
+        <p>Initial</p>
+      </description>
+    </release>
+  </releases>
+</component>

@@ -1,22 +1,27 @@
-# Pantheon XDG Desktop Portals
-[![Translation status](https://l10n.elementary.io/widgets/desktop/-/portals/svg-badge.svg)](https://l10n.elementary.io/engage/desktop/)
+# xdg-desktop-portal-faraway
 
-## Building, Testing, and Installation
+AppChooser portal that opens the default app. Based on [Pantheon XDG Desktop Portals](https://github.com/elementary/portals/).
 
 You'll need the following dependencies:
-* libgranite-7-dev
-* gtk4
-* libvte-2.91-dev
-* meson
-* valac
+- glib
+- systemd
+- meson
+- valac
 
-Run `meson` to configure the build environment and then `ninja test` to build and run tests
+## Install
 
-    meson build --prefix=/usr
-    cd build
-    ninja test
+```shell
+$ meson setup builddir --prefix=/usr && meson compile -C builddir && meson install -C builddir
+```
 
-To install, use `ninja install`, then execute with `/usr/libexec/xdg-desktop-portal-pantheon -r`
+## Set as default by appending the following to your portals config
 
-    sudo ninja install
-    /usr/libexec/xdg-desktop-portal-pantheon -r
+```conf
+org.freedesktop.impl.portal.AppChooser=faraway;
+```
+
+## Run it
+
+```shell
+$ /usr/libexec/xdg-desktop-portal-faraway -r
+```

@@ -1,10 +1,10 @@
 install_data(
-    'pantheon.portal',
+    'faraway.portal',
     install_dir: datadir / 'xdg-desktop-portal' / 'portals'
 )
 
 configure_file(
-    input: 'org.freedesktop.impl.portal.desktop.pantheon.service.in',
+    input: 'org.freedesktop.impl.portal.desktop.faraway.service.in',
     output: '@BASENAME@',
     configuration: conf_data,
     install: true,
@@ -24,16 +24,10 @@ configure_file(
     install_dir: systemduserunitdir
 )
 
-i18n.merge_file(
-    input: 'portals.metainfo.xml.in',
-    output: 'io.elementary.portals.metainfo.xml',
-    po_dir: meson.project_source_root() / 'po' / 'extra',
-    type: 'xml',
+configure_file(
+    input: 'faraway.metainfo.xml.in',
+    output: 'dev.geopjr.faraway.metainfo.xml',
+    configuration: conf_data,
     install: true,
     install_dir: datadir / 'metainfo'
-)
-
-icon_res = gnome.compile_resources(
-    'screenshot-icon-resources',
-    'gresource.xml'
 )

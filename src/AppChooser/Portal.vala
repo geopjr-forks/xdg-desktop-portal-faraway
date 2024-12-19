@@ -5,83 +5,55 @@
 
 [DBus (name = "org.freedesktop.impl.portal.AppChooser")]
 public class AppChooser.Portal : Object {
-    private HashTable<ObjectPath, Dialog> handles;
-    private DBusConnection connection;
+	private DBusConnection connection;
 
-    public Portal (DBusConnection connection) {
-        handles = new HashTable<ObjectPath, Dialog> (str_hash, str_equal);
-        this.connection = connection;
-    }
+	public Portal (DBusConnection connection) {
+		this.connection = connection;
+	}
 
-    public async void choose_application (
-        ObjectPath handle,
-        string app_id,
-        string parent_window,
-        string[] choices,
-        HashTable<string, Variant> options,
-        out uint response,
-        out HashTable<string, Variant> results
-    ) throws DBusError, IOError {
-        string last_choice = "";
-        string content_type = "";
-        string filename = "";
+	public async void choose_application (
+		ObjectPath handle,
+		string app_id,
+		string parent_window,
+		string[] choices,
+		HashTable<string, Variant> options,
+		out uint response,
+		out HashTable<string, Variant> results
+	) throws DBusError, IOError {
+		string res_app_id = "";
+		var _results = new HashTable<string, Variant> (str_hash, str_equal);
 
-        if ("last_choice" in options && options["last_choice"].is_of_type (VariantType.STRING)) {
-            last_choice = options["last_choice"].get_string ();
-        }
+		string content_type = "";
+		if ("content_type" in options && options["content_type"].is_of_type (VariantType.STRING)) {
+			content_type = options["content_type"].get_string ();
+		}
 
-        if ("content_type" in options && options["content_type"].is_of_type (VariantType.STRING)) {
-            content_type = options["content_type"].get_string ();
-        }
+		// If content_type is provided, spawn xdg-mime to get the default app for it.
+		// If that succeeds, check if it's one of the choices and set it as the result app id.
+		if (content_type != "") {
+			try {
+				string? stdout = null;
+				Process.spawn_command_line_sync (@"xdg-mime query default $content_type", out stdout, null, null);
+				if (stdout != null) {
+					string clean_mime_out = stdout.replace (".desktop", "").strip ();
+					if (clean_mime_out != "" && clean_mime_out in choices) res_app_id = clean_mime_out;
+				}
+			} catch {}
+		}
 
-        if ("filename" in options && options["filename"].is_of_type (VariantType.STRING)) {
-            filename = options["filename"].get_string ();
-        }
+		// Else if last_choice is available, set it to that
+		if (res_app_id == "" && "last_choice" in options && options["last_choice"].is_of_type (VariantType.STRING)) {
+			string last_choice = options["last_choice"].get_string ();
+			if (last_choice != "" && last_choice in choices) res_app_id = last_choice;
+		}
 
-        var dialog = new AppChooser.Dialog (
-            app_id,
-            parent_window,
-            last_choice,
-            content_type,
-            filename
-        );
+		// Else set it to the first choice
+		if (res_app_id == "" && choices.length > 0) {
+			res_app_id = choices[0];
+		}
 
-        if ("modal" in options && options["modal"].is_of_type (VariantType.BOOLEAN)) {
-            dialog.modal = options["modal"].get_boolean ();
-        }
-
-        dialog.update_choices (choices);
-
-        try {
-            dialog.register_id = connection.register_object<Dialog> (handle, dialog);
-        } catch (Error e) {
-            critical (e.message);
-        }
-
-        var _results = new HashTable<string, Variant> (str_hash, str_equal);
-        uint _response = 2;
-
-        dialog.choiced.connect ((app_id) => {
-            _results["choice"] = app_id.replace (".desktop", "");
-            _response = app_id == "" ? 1 : 0;
-
-            choose_application.callback ();
-        });
-
-        handles[handle] = dialog;
-        dialog.present ();
-        yield;
-
-        connection.unregister_object (dialog.register_id);
-        dialog.destroy ();
-
-        results = _results;
-        response = _response;
-    }
-
-    public async void update_choices (ObjectPath handle, string[] choices) throws DBusError, IOError {
-        if (handle in handles) {
-            handles[handle].update_choices (choices);
-        }
-    }
+		_results["choice"] = res_app_id;
+		results = _results;
+		response = res_app_id == "" ? 1 : 0;
+	}
 }

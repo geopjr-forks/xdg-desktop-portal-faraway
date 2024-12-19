@@ -1,0 +1,7 @@
+[Unit]
+Description=AppChooser portal that opens the default app
+
+[Service]
+Type=dbus
+BusName=org.freedesktop.impl.portal.desktop.faraway
+ExecStart=@LIBEXECDIR@/xdg-desktop-portal-faraway

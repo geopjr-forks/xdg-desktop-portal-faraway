@@ -1,7 +1,0 @@
-[Unit]
-Description=Portal service (Pantheon implementation)
-
-[Service]
-Type=dbus
-BusName=org.freedesktop.impl.portal.desktop.pantheon
-ExecStart=@LIBEXECDIR@/xdg-desktop-portal-pantheon

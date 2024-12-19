@@ -1,4 +1,0 @@
-[D-BUS Service]
-Name=org.freedesktop.impl.portal.desktop.pantheon
-Exec=@LIBEXECDIR@/xdg-desktop-portal-pantheon
-SystemdService=xdg-desktop-portal-pantheon.service
