@@ -8,7 +8,7 @@ datadir = prefix / get_option('datadir')
 libexecdir = prefix / get_option('libexecdir')
 localedir = prefix / get_option('localedir')
 
-systemd_dep = dependency('systemd')
+systemd_dep = dependency('systemd', required: false)
 
 glib_dep = dependency('glib-2.0')
 gobject_dep = dependency('gobject-2.0')

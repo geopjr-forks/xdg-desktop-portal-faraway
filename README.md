@@ -4,7 +4,7 @@ AppChooser portal that opens the default app. Based on [Pantheon XDG Desktop Por
 
 You'll need the following dependencies:
 - glib
-- systemd
+- systemd (optional)
 - meson
 - valac
 

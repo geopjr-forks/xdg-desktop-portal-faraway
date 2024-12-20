@@ -13,7 +13,10 @@ configure_file(
 
 systemduserunitdir = get_option('systemduserunitdir')
 if systemduserunitdir == ''
-    systemduserunitdir = systemd_dep.get_variable('systemduserunitdir', pkgconfig_define: [ 'prefix', prefix ])
+    systemduserunitdir = prefix / 'lib' / 'systemd' / 'user'
+    if systemd_dep.found ()
+        systemduserunitdir = systemd_dep.get_variable('systemduserunitdir', pkgconfig_define: [ 'prefix', prefix ])
+    endif
 endif
 
 configure_file(
